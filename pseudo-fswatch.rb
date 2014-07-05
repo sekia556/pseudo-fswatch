@@ -8,15 +8,22 @@ def usage()
 end
 
 def get_mtime(file)
-  rval = Time.now
+  rval = nil
   if File.exist?(file)
     rval = File::mtime(file)
   end
   rval
 end
 
-def modified?(target, last_mod_time, observed)
-  observed - last_mod_time > 0
+def modified?(last_mod_time, observed)
+  if last_mod_time && observed
+    return observed - last_mod_time > 0
+  elsif !last_mod_time && !observed
+    return false
+  end
+    
+  # either last_mod_time or observerd is changed 
+  true
 end
 
 abort usage() if ARGV.size < 2
@@ -33,7 +40,7 @@ begin
     #`touch #{target}`
     
     observed = get_mtime(target)
-    if modified?(target, last_modified, observed)
+    if modified?(last_modified, observed)
       puts "observed_time=#{observed}" if DEBUG
       puts "last_modified=#{last_modified}" if DEBUG
       puts "detected and run action" if DEBUG
