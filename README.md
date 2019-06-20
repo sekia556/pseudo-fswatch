@@ -1,4 +1,4 @@
 pseudo-fswatch
 ==============
 
-simple tool that likes fswatch
+A simple ruby tool which likes fswatch. 
